@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from survey.opros.models import ChoiceQuestion, Survey, Question, Participant
+from .models import Option, Survey, Question, Participant
 
 admin.site.register(Participant)
 admin.site.register(Survey)
 admin.site.register(Question)
-admin.site.register(ChoiceQuestion)
+admin.site.register(Option)
 
