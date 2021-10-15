@@ -48,5 +48,6 @@ class Option(models.Model):
 class AnswerUser(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="user_answer")
     question = models.ForeignKey(Question, related_name="answer", on_delete=models.CASCADE)
-    answer_text = models.TextField(max_length=200, blank=False)
-    answer_tick = models.BooleanField(default=False)
+    option = models.ForeignKey(Option, related_name="answers_to_option", on_delete=models.CASCADE)
+
+    # answer_tick = models.BooleanField(default=False)

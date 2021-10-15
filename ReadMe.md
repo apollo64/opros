@@ -7,7 +7,7 @@
 
 
 ```bash
-git clone 
+git clone  https://github.com/apollo64/opros.githtm
 pip install -r requirements.txt
 ```
 

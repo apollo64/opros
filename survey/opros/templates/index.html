@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Список опросов{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Доступные опросы</h3>
+            </div>
+
+            {% for survey in surveys %}
+<li class="list-group-item">
+    <strong>{{ survey.name }}</strong>
+    <span class="pull-right">
+        <a href="{% url 'answer' survey.pk %}" class="btn btn-info btn-xs">ответить на опрос</a> &nbsp;
+        <a href="#" class="btn btn-default btn-xs">View Results</a> &nbsp;
+    </span>
+</li>
+{% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

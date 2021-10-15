@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Результат{% endblock %}
+
+{% block main %}
+<div class="panel-body">
+    <h3>{{ question.text }}</h3>
+</div>
+<ul>
+{% for option in question.choice.all %}
+    <li>{{ option.text }} -- {{ option.vote }} vote{{ option.votes|pluralize }}</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'answer' question.id %}">Vote again?</a>
+
+{% endblock %}
+
