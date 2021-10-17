@@ -11,5 +11,8 @@
 #         ok=1
 
 # class SurveyForm(forms.Form):
-
-
+# from django import forms
+#
+#
+# class Aform(forms.From):
+#     a  = forms.ModelMultipleChoiceField()

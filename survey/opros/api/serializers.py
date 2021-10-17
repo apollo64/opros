@@ -7,10 +7,10 @@ class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = "__all__"
-        read_only_fields = ("vote",)
+        read_only_fields = ("vote","question",)
 
 class QuestionSerializer(serializers.ModelSerializer):
-    options = OptionSerializer(many=True, read_only=True)
+    choice = OptionSerializer(many=True, read_only=True)
     class Meta:
         model = Question
         # fields = "__all__"
@@ -19,8 +19,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class SurveySerializer(serializers.ModelSerializer):
-    # questions = QuestionSerializer(many=True, read_only=True)
-    question =serializers.StringRelatedField(read_only=True)
+    question = QuestionSerializer(many=True, read_only=True)
+    # question =serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Survey
         fields = "__all__"

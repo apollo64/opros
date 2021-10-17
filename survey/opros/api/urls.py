@@ -14,7 +14,7 @@ urlpatterns = [
          name="survey-question"),
     path("question/<int:pk>/", QuestionDetailApiView.as_view(),
          name="question-detail"),
-    path("question/<int:question_pk>/options/", OptionListCreateApiView.as_view(),
+    path("question/<int:question_pk>/option/", OptionListCreateApiView.as_view(),
          name="que-options"),
     path("option/<int:pk>/", OptionDetailApiView.as_view(),
          name="options"),
