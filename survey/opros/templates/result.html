@@ -6,13 +6,15 @@
 <div class="panel-body">
     <h3>{{ question.text }}</h3>
 </div>
+
+
 <ul>
 {% for option in question.choice.all %}
     <li>{{ option.text }} -- {{ option.vote }} vote{{ option.votes|pluralize }}</li>
 {% endfor %}
 </ul>
 
-<a href="{% url 'answer' question.id %}">Vote again?</a>
+<a href="{% url 'answer' survey_pk %}">Vote again?</a>
 
 {% endblock %}
 

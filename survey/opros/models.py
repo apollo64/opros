@@ -4,9 +4,6 @@ from django.db import models
 
 # Create your models here.
 
-class Participant(User):
-    pass
-
 
 class Survey(models.Model):
     # participant = models.ForeignKey(Participant, on_delete=models.PROTECT, related_name="survey", blank=True, null=True)
@@ -17,7 +14,6 @@ class Survey(models.Model):
 
     def __str__(self):
         return f"{self.name}, {self.start_at}"
-
 
 class Question(models.Model):
     SINGLE_CHOICE = 'sin'
@@ -35,7 +31,6 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
-
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choice')
     text = models.CharField(max_length=100, blank=True)
@@ -45,9 +40,20 @@ class Option(models.Model):
         return self.text
 
 
-class AnswerUser(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="user_answer")
-    question = models.ForeignKey(Question, related_name="answer", on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, related_name="answers_to_option", on_delete=models.CASCADE)
 
+class PartiSession(models.Model):
+    # user= models.OneToOneField(User, default=None, on_delete=models.CASCADE, blank=True, related_name='session')
+    session_key = models.CharField(max_length=100, blank=True, null=True)
+    survey = models.ForeignKey(Survey, on_delete=models.DO_NOTHING, related_name="user", blank=True, null=True)
+    question = models.ForeignKey(Question,on_delete=models.DO_NOTHING, related_name="user_question", blank=True, null=True)
+
+    def __str__(self):
+        return f"User with id: {self.pk}"
+
+#
+# class AnswerUser(models.Model):
+#     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="user_answer")
+#     question = models.ForeignKey(Question, related_name="answer", on_delete=models.CASCADE)
+#     option = models.ForeignKey(Option, related_name="answers_to_option", on_delete=models.CASCADE)
+#
     # answer_tick = models.BooleanField(default=False)
