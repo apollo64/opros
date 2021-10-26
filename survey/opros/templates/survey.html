@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h3>{{ question.text }}</h3>
+            <h3>{{ question.survey.text }}</h3>
         </div>
     </div>
 
@@ -11,21 +11,10 @@
         <div class="col-lg-12">
             <hr />
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-            <form action="{% url 'answer' question.id %}" method="post">
+            <form action="{% url 'answer' survey.id %}" method="post">
                 {% csrf_token %}
-                <div class="form-group">
-                    <div class="radio">
-                        {% for option in question.choice.all %}
-                        <label >{{ option.text }}
-                            <input type="radio" name="option" value={{ option.pk }}>
 
-                        </label> &nbsp;
-                        {% endfor %}
-
-
-                    </div>
-                </div>
-
+                {{form.as_ul}}
                 <hr />
 
                 <button type="submit" class="btn btn-info">

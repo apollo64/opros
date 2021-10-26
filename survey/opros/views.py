@@ -1,10 +1,12 @@
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 
 # Create your views here.
+from django.template import RequestContext
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
+from .forms import  OptionForm
 from .models import Survey, Question, Option, PartiSession
 
 
@@ -27,7 +29,10 @@ class SurveyListResult(ListView):
         # user = PartiSession.objects.get(session_key = user_key)
         return Survey.objects.filter(session=user_key).order_by('-received_date')
 
+
 """Original """
+
+
 def SurveyAnswer(request, survey_pk):
     question = get_object_or_404(Question, id=survey_pk)
     user_key = request.session.session_key
@@ -78,10 +83,6 @@ def SurveyAnswer(request, survey_pk):
 #         return HttpResponseRedirect(reverse('result', args=(survey.pk,)))
 
 
-
-
-
-
 def SurveyResult(request, question_id):
     questions = []
     '''todo: question_id change to survey and retreate info from Survey to results of votes '''
@@ -94,4 +95,29 @@ def SurveyResult(request, question_id):
     # questions = get_object_or_404(Question, user_question=session)
     question = Question.objects.filter(user_question=session)[0]
     survey_pk = question.survey.pk
-    return render(request, "result.html", {"question": question,"survey_pk": survey_pk})
+    return render(request, "result.html", {"question": question, "survey_pk": survey_pk})
+
+
+def SurveySpecQuesView(request, survey_pk):
+    survey = get_object_or_404(Survey, id= survey_pk)
+    question = Question.objects.filter(survey=survey).first()
+    user_key = request.session.session_key
+
+    if request.method =='POST':
+        user = PartiSession.objects.get_or_create(session_key=user_key)[0]
+        user.question_id = question.pk
+        user.survey_id = survey.pk
+        user.save()
+        form = OptionForm(request.POST ,instance =question )
+        if form.is_valid():
+            choosen_options = []
+            choosen_options = form.cleaned_data['options']
+            ok =1
+            form.save()
+            # HttpResponseRedirect("userresults/<int:pk>/")
+            return HttpResponseRedirect(reverse('user_results', args=(request.user.user_key,)))
+        pass
+    else:
+        form = OptionForm(instance = question)
+        return render(request,'survey.html', {'form': form, 'survey':survey })
+        # return render_to_response('answer', context_instance=RequestContext(request, {'form': form})
