@@ -34,7 +34,7 @@ class Question(models.Model):
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choice')
     text = models.CharField(max_length=100, blank=True)
-    vote = models.IntegerField(default=0)
+    vote = models.IntegerField(default=0, editable=False)
 
     def __str__(self):
         return self.text
@@ -46,6 +46,7 @@ class PartiSession(models.Model):
     session_key = models.CharField(max_length=100, blank=True, null=True)
     survey = models.ForeignKey(Survey, on_delete=models.DO_NOTHING, related_name="user", blank=True, null=True)
     question = models.ForeignKey(Question,on_delete=models.DO_NOTHING, related_name="user_question", blank=True, null=True)
+    option = models.ForeignKey(Option,on_delete=models.DO_NOTHING, related_name="options", blank=True, null=True)
 
     def __str__(self):
         return f"User with id: {self.pk}"

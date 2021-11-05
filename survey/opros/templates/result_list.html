@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="panel-body">
 
-</body>
-</html>
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>check your surveys</h2>
+        </div>
+    </div>
+    <ul>
+        <!-- Iterate over object_list -->
+        {% for survey in surveys_answered %}
+        <!-- Display Objects -->
+        <li>Survey title: {{ survey.name }}</li>
+        <ul>
+            {%for question in survey.question.all%}
+            <li>Question: {{ question.text }}</li>
+            <table cellspacing=12>
+                <tr>
+                    <th> Options</th>
+                    <th> Votes</th>
+                </tr>
+                {%for option in question.choice.all%}
+                <tr>
+                    <td>{{option.text}}</td>
+                    <td>{{option.vote}}</td>
+                </tr>
+                {%endfor%}
+            </table>
+
+            <hr/>
+
+
+            {%endfor%}
+
+        </ul>
+
+
+        <hr/>
+        {% empty %}
+        <li>No results yeat.</li>
+        {% endfor %}
+    </ul>
+</div>
+

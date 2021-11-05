@@ -24,34 +24,35 @@ class SurveyListResult(ListView):
     context_object_name = 'surveys_answered'
 
     def get_queryset(self):
-        user_key = self.request.session_key
-        user = PartiSession.objects.get_or_create(session_key=user_key)
-        # user = PartiSession.objects.get(session_key = user_key)
-        return Survey.objects.filter(session=user_key).order_by('-received_date')
+        user_pk = self.kwargs['user_pk']
+        # user = PartiSession.objects.get_or_create(session_key=user_key)
+        user = PartiSession.objects.get(id = user_pk)
+        return Survey.objects.filter(user=user).order_by('-start_at')
+        # return Survey.objects.filter(session=user_key).order_by('-received_date')
 
 
 """Original """
-
-
-def SurveyAnswer(request, survey_pk):
-    question = get_object_or_404(Question, id=survey_pk)
-    user_key = request.session.session_key
-
-    try:
-        choosed_options = question.choice.get(pk=request.POST['option'])
-
-    except (KeyError, Option.DoesNotExist):
-        return render(request, "survey.html", {"question": question,
-                                               "error_message": "Вы не выбрали.", })
-    else:
-        survey = Survey.objects.get(question=question)
-        user = PartiSession.objects.get_or_create(session_key=user_key)[0]
-        user.question_id = question.pk
-        user.survey_id = survey.pk
-        user.save()
-        choosed_options.vote += 1
-        choosed_options.save()
-        return HttpResponseRedirect(reverse('result', args=(question.survey.pk,)))
+#
+#
+# def SurveyAnswer(request, survey_pk):
+#     question = get_object_or_404(Question, id=survey_pk)
+#     user_key = request.session.session_key
+#
+#     try:
+#         choosed_options = question.choice.get(pk=request.POST['option'])
+#
+#     except (KeyError, Option.DoesNotExist):
+#         return render(request, "survey.html", {"question": question,
+#                                                "error_message": "Вы не выбрали.", })
+#     else:
+#         survey = Survey.objects.get(question=question)
+#         user = PartiSession.objects.get_or_create(session_key=user_key)[0]
+#         user.question_id = question.pk
+#         user.survey_id = survey.pk
+#         user.save()
+#         choosed_options.vote += 1
+#         choosed_options.save()
+#         return HttpResponseRedirect(reverse('result', args=(question.survey.pk,)))
 
 
 # def SurveyAnswer(request, survey_pk):
@@ -102,21 +103,25 @@ def SurveySpecQuesView(request, survey_pk):
     survey = get_object_or_404(Survey, id= survey_pk)
     question = Question.objects.filter(survey=survey).first()
     user_key = request.session.session_key
+    user = PartiSession.objects.get_or_create(session_key=user_key)[0]
 
     if request.method =='POST':
-        user = PartiSession.objects.get_or_create(session_key=user_key)[0]
         user.question_id = question.pk
         user.survey_id = survey.pk
         user.save()
         form = OptionForm(request.POST ,instance =question )
         if form.is_valid():
-            choosen_options = []
             choosen_options = form.cleaned_data['options']
             ok =1
+            for option in choosen_options:
+                option.vote +=1
+                option.save()
             form.save()
             # HttpResponseRedirect("userresults/<int:pk>/")
-            return HttpResponseRedirect(reverse('user_results', args=(request.user.user_key,)))
-        pass
+            return HttpResponseRedirect(reverse('user_results', args=(user.id,)))
+            # return render(request, "result_list.html", { "user_id": user.id})
+
+
     else:
         form = OptionForm(instance = question)
         return render(request,'survey.html', {'form': form, 'survey':survey })
