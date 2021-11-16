@@ -12,9 +12,9 @@ class OptionInline(admin.TabularInline):
 class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['text']}),
-        ('Date information', {'fields': ['type', 'survey']}),
+        ('Date information', {'fields': ['id','type', 'survey']}),
     ]
-    readonly_fields = ['survey', 'type']
+    readonly_fields = ['survey', 'type', 'id',]
     inlines = [OptionInline]
 
 class QuesInline(admin.TabularInline):
@@ -26,7 +26,7 @@ class SurveyAdmin(admin.ModelAdmin):
         (None, {'fields': ['name']}),
         ('Type', {'fields': [ 'start_at',  'finish_at', 'description'] }),
     ]
-    readonly_fields = ['start_at']
+    readonly_fields = ['start_at', 'active']
     inlines = [QuesInline]
 
 admin.site.register(PartiSession)
