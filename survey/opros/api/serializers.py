@@ -36,7 +36,7 @@ class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
         # fields = "__all__"
-        fields = ('name','description',
+        fields = ('id', 'name','description',
                   'start_at','finish_at',
                   'active', 'question')
 

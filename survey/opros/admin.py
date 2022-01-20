@@ -26,7 +26,7 @@ class SurveyAdmin(admin.ModelAdmin):
         (None, {'fields': ['name']}),
         ('Type', {'fields': [ 'start_at',  'finish_at', 'description'] }),
     ]
-    readonly_fields = ['start_at', 'active']
+    readonly_fields = ['id', 'start_at', 'active']
     inlines = [QuesInline]
 
 admin.site.register(PartiSession)

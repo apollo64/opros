@@ -16,6 +16,13 @@ class SurveyCreateListApiView(generics.ListCreateAPIView):
     pagination_class = PaginationOption
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def list(self, request, *args, **kwargs):
+        que_pk = self.kwargs.get('question_pk')
+        question = get_object_or_404(Question, pk=que_pk)
+        queryset = Option.objects.filter(question=question)
+        serializer = OptionSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class SurveyDetailEditDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Survey.objects.all()

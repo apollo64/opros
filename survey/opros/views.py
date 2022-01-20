@@ -101,11 +101,12 @@ def SurveyResult(request, question_id):
 
 def SurveySpecQuesView(request, survey_pk):
     survey = get_object_or_404(Survey, id= survey_pk)
-    question = Question.objects.filter(survey=survey).first()
+    questions = Question.objects.filter(survey=survey)
     user_key = request.session.session_key
     user = PartiSession.objects.get_or_create(session_key=user_key)[0]
 
     if request.method =='POST':
+        print(request)
         user.question_id = question.pk
         user.survey_id = survey.pk
         user.save()
@@ -122,7 +123,8 @@ def SurveySpecQuesView(request, survey_pk):
             # return render(request, "result_list.html", { "user_id": user.id})
 
 
-    else:
-        form = OptionForm(instance = question)
-        return render(request,'survey.html', {'form': form, 'survey':survey })
-        # return render_to_response('answer', context_instance=RequestContext(request, {'form': form})
+        else:
+            form = OptionForm(instance = question)
+            ok=1
+            return render(request,'survey.html', {'form': form, 'survey':survey })
+            # return render_to_response('answer', context_instance=RequestContext(request, {'form': form})
